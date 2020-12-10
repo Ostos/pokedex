@@ -18,7 +18,7 @@ const MainPage = (props) => {
                         console.log("Show pokemon in the bag");
                     }}
                 />
-                <div>Search</div>
+                <div><input type="text" placeholder="Search..." /></div>
             </div>
             <div className="MainPage__cards">
                 {allPokemon.map(pokemon => {

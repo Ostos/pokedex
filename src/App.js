@@ -31,7 +31,8 @@ function App() {
       <BrowserRouter>
         <Switch>
           <Route
-            path={detailPage}
+            exact
+            path="/pokemons/:id"
             render={() => <DetailPage />}
           />
           <Route

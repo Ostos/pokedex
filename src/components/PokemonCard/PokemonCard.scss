@@ -1,0 +1,10 @@
+.PokemonCard {
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+
+    &__image {
+        height: 4rem;
+    }
+}
