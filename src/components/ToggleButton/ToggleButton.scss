@@ -1,0 +1,13 @@
+.ToggleButton {
+    &__button {
+        background-color: #ccc;
+        border: none;
+        color: black;
+        padding: 0.5rem 1rem;
+        outline: none;
+        &--selected {
+            background-color: red;
+            color: white;
+        }
+    }
+}
