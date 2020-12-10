@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { SEARCH_TYPE } from "../../constants";
 import { getSearchSuggestions } from "../../utils/utils";
 import PokemonCard from "../PokemonCard/PokemonCard";
 import ToggleButton from "../ToggleButton/ToggleButton";
@@ -8,55 +9,60 @@ const MainPage = (props) => {
     const { allPokemon, pokemonHashMap } = props;
     const [pokemonToRender, setPokemonToRender] = useState([]);
     const [searchInput, setSearchInput] = useState('');
-    const [searchType, setSearchType] = useState('ALL');
+    const [searchType, setSearchType] = useState(SEARCH_TYPE.ALL);
 
     function renderAllPokemon() {
         setPokemonToRender(allPokemon);
         setSearchInput('');
-        setSearchType('ALL');
+        setSearchType(SEARCH_TYPE.ALL);
+    }
+
+    function filterByPokemonInBag() {
+        return allPokemon.filter(
+            function filterByPokemonInBag(pokemon) {
+                const storedPokemon = JSON.parse(localStorage.getItem(`pokemon-${pokemon.name}`));
+                return pokemon.name === storedPokemon.name && storedPokemon.inBag;
+            }
+        );
+    }
+
+    function filterPokemonBySuggestions(suggestions) {
+        return allPokemon.filter(
+            function filterBySuggestions(pokemon) {
+                return suggestions.indexOf(pokemon.name) !== -1
+            }
+        )
+    }
+
+    function filterInBagPokemonBySuggestions(suggestions) {
+        return allPokemon
+                .filter(
+                    function filterBySuggestionsAndInBag(pokemon) {
+                        const storedPokemon = JSON.parse(localStorage.getItem(`pokemon-${pokemon.name}`));
+                        return pokemon.name === storedPokemon.name && storedPokemon.inBag && suggestions.indexOf(pokemon.name) !== -1;
+                    }
+                );
     }
 
     function renderPokemonInBag() {
-        setPokemonToRender(
-            allPokemon.filter(
-                function filterByPokemonInBag(pokemon) {
-                    const storedPokemon = JSON.parse(localStorage.getItem(`pokemon-${pokemon.name}`));
-                    return pokemon.name === storedPokemon.name && storedPokemon.inBag;
-                }
-            )
-        );
+        setPokemonToRender(filterByPokemonInBag());
         setSearchInput('');
-        setSearchType('IN_BAG');
+        setSearchType(SEARCH_TYPE.IN_BAG);
     }
 
     function searchHandler(e) {
         const value = e.target.value;
         const suggestions = getSearchSuggestions(value, pokemonHashMap);
-
         setSearchInput(value);
 
         if(suggestions.length > 0) {
-            if(searchType === 'ALL') {
-                setPokemonToRender(
-                    allPokemon.filter(
-                        function filterBySuggestions(pokemon) {
-                            return suggestions.indexOf(pokemon.name) !== -1
-                        }
-                    )
-                );
+            if(searchType === SEARCH_TYPE.ALL) {
+                setPokemonToRender(filterPokemonBySuggestions(suggestions));
             } else {
-                setPokemonToRender(
-                    allPokemon
-                        .filter(
-                            function filterBySuggestionsAndInBag(pokemon) {
-                                const storedPokemon = JSON.parse(localStorage.getItem(`pokemon-${pokemon.name}`));
-                                return suggestions.indexOf(pokemon.name) !== -1 && pokemon.name === storedPokemon.name && storedPokemon.inBag;
-                            }
-                        )
-                );
+                setPokemonToRender(filterInBagPokemonBySuggestions(suggestions));
             }
         } else {
-            setPokemonToRender(value.length ? [] : allPokemon);
+            setPokemonToRender(value.length ? [] : (searchType === SEARCH_TYPE.ALL ? allPokemon : filterByPokemonInBag()));
         }
     }
 

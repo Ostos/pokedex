@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import "./DetailPage.scss";
 
 const DetailPage = (props) => {
-    // const { setPokemonInBag } = props;
     const [pokemon, setPokemon] = useState({});
     const [isInBag, setIsInBag] = useState(false);
     const name = window.location.pathname.split('/')[2];
