@@ -1,20 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PokemonCard from "../PokemonCard/PokemonCard";
 import ToggleButton from "../ToggleButton/ToggleButton";
 import "./MainPage.scss";
 
 const MainPage = (props) => {
-    const { allPokemon } = props;
+    const { allPokemon, pokemonInBag } = props;
+    const [pokemonToRender, setPokemonToRender] = useState([]);
 
-    const [pokemonToRender, setPokemonToRender] = useState(allPokemon);
+    console.log(pokemonToRender);
 
     function renderAllPokemon() {
         setPokemonToRender(allPokemon);
     }
 
     function renderPokemonInBag() {
-        setPokemonToRender([allPokemon[0]]); // NEEDS WORK: Filter them
+        setPokemonToRender(
+            allPokemon.filter(
+                function filterByPokemonInBag(pokemon) {
+                    return pokemonInBag.indexOf(pokemon.name) !== -1
+                }
+            )
+        );
     }
+
+    useEffect(() => {
+        setPokemonToRender(allPokemon);
+    }, [allPokemon]);
 
     return(
         <div className="MainPage">

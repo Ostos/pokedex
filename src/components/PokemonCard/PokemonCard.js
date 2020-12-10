@@ -8,21 +8,22 @@ const PokemonCard = (props) => {
     const [imageSrc, setImageSrc] = useState("");
 
     async function getPokemon() {
-        // let individualPokemonList = JSON.parse(localStorage.getItem('pokedex-individual-pokemon-list'));
-        // individualPokemonList = !individualPokemonList ? {} : individualPokemonList
-
-        // if(!individualPokemonList[name]) {
-        //     const service = new pokedexService();
-        //     const pokemon = await service.getPokemon(url);
-        //     individualPokemonList = JSON.parse(localStorage.getItem('pokedex-individual-pokemon-list'));
-        //     setImageSrc(pokemon.sprites.front_default);
-        //     console.log({ ...individualPokemonList, [name]: pokemon });
-        //     localStorage.setItem('pokedex-individual-pokemon-list', JSON.stringify({ ...individualPokemonList, [name]: pokemon }));
-        // } else {
-        //     setImageSrc(individualPokemonList.sprites.front_default);
-        // }
-
-
+        let pokemonInfo = JSON.parse(localStorage.getItem(`pokemon-${name}`));
+        if(!pokemonInfo) {
+            const service = new pokedexService();
+            const pokemon = await service.getPokemon(url);
+            const pokemonDataToStore = {
+                abilities: pokemon.abilities.map(ability => ability.ability.name).join(" "),
+                height: pokemon.height,
+                weight: pokemon.weight,
+                types: pokemon.types.map(type => type.type.name).join(" "),
+                imageUrl: pokemon.sprites.front_default
+            };
+            localStorage.setItem(`pokemon-${name}`, JSON.stringify(pokemonDataToStore));
+            setImageSrc(pokemonDataToStore.imageUrl);
+        } else {
+            setImageSrc(pokemonInfo.imageUrl);
+        }
     }
 
     useEffect(() => {
@@ -31,7 +32,7 @@ const PokemonCard = (props) => {
 
     return(
         <Link
-            to="/pokemons/1"
+            to={`/pokemons/${name}`}
             className="PokemonCard"
         >
             <img src={imageSrc} className="PokemonCard__image" />

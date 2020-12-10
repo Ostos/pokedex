@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./DetailPage.scss";
 
-const DetailPage = (props) => {
+const DetailPage = () => {
     const [pokemon, setPokemon] = useState({});
     const [isInBag, setIsInBag] = useState(false);
 
@@ -12,10 +12,10 @@ const DetailPage = (props) => {
     }
 
     useEffect(() => {
-        const pokemon = JSON.parse(localStorage.getItem("pokemon"));
-        const inBag = true; // Get value from localstorage
-        setPokemon(pokemon);
-        setIsInBag(inBag);
+        // const pokemon = JSON.parse(localStorage.getItem(`pokemon-${name}`));
+        // const inBag = JSON.parse(localStorage.getItem('pokedex-pokemon-in-bag'));
+        // setPokemon(pokemon);
+        // setIsInBag(inBag);
     }, []);
 
     return(

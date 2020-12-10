@@ -7,18 +7,24 @@ import pokedexService from './services/pokedexService';
 import React, { useEffect, useState } from 'react';
 
 function App() {
-
   const [allPokemon, setAllPokemon] = useState([]);
+  const [pokemonInBag, setPokemonInBag] = useState([]);
 
   async function storeAllPokemon() {
-    const storedPokemon = localStorage.getItem('pokedex-all-pokemon');
+    const storedPokemon = JSON.parse(localStorage.getItem('pokedex-all-pokemon'));
     if(!storedPokemon) {
       const service = new pokedexService();
       const pokemon = await service.getAllPokemon();
       localStorage.setItem('pokedex-all-pokemon', JSON.stringify(pokemon.results));
-      setAllPokemon(pokemon);
+      setAllPokemon(pokemon.results);
     } else {
-      setAllPokemon(JSON.parse(storedPokemon));
+      setAllPokemon(storedPokemon);
+    }
+    const pokemonInBag = JSON.parse(localStorage.getItem('pokedex-pokemon-in-bag'));
+    if(!pokemonInBag) {
+      localStorage.setItem('pokedex-pokemon-in-bag', JSON.stringify([]));
+    } else {
+      setPokemonInBag(pokemonInBag);
     }
   }
 
@@ -32,12 +38,12 @@ function App() {
         <Switch>
           <Route
             exact
-            path="/pokemons/:id"
+            path="/pokemons/:name"
             render={() => <DetailPage />}
           />
           <Route
             path="*"
-            render={() => <MainPage allPokemon={allPokemon}/>}
+            render={() => <MainPage allPokemon={allPokemon} pokemonInBag={pokemonInBag} />}
           />
         </Switch>
       </BrowserRouter>
