@@ -2,7 +2,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import MainPage from './components/MainPage/MainPage';
 import DetailPage from './components/DetailPage/DetailPage';
 import './App.css';
-import { detailPage, mainPage } from './utils/routingPaths';
+import { ANY_PAGE, DETAIL_PAGE } from './utils/routingPaths';
 import pokedexService from './services/pokedexService';
 import React, { useEffect, useState } from 'react';
 import { createDictFromArrayOfWords } from './utils/utils';
@@ -50,11 +50,11 @@ function App() {
         <Switch>
           <Route
             exact
-            path="/pokemons/:name"
+            path={DETAIL_PAGE}
             render={() => <DetailPage />}
           />
           <Route
-            path="*"
+            path={ANY_PAGE}
             render={() => <MainPage allPokemon={allPokemon} pokemonHashMap={pokemonHashMap} />}
           />
         </Switch>

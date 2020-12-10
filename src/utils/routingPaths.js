@@ -1,2 +1,2 @@
-export const mainPage = "/mainPage";
-export const detailPage = "/detailPage";
+export const ANY_PAGE = "*";
+export const DETAIL_PAGE = "/pokemons/:name";
