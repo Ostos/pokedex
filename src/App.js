@@ -1,23 +1,28 @@
-import logo from './logo.svg';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import MainPage from './components/MainPage';
+import DetailPage from './components/DetailPage';
 import './App.css';
+import { detailPage, mainPage } from './utils/routingPaths';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="Pokedex">
+      <BrowserRouter>
+        <Switch>
+          <Route
+            path={mainPage}
+            render={() => <MainPage />}
+          />
+          <Route
+            path={detailPage}
+            render={() => <DetailPage />}
+          />
+          <Route
+            path="*"
+            render={() => <MainPage />}
+          />
+        </Switch>
+      </BrowserRouter>
     </div>
   );
 }
