@@ -7,8 +7,6 @@ const MainPage = (props) => {
     const { allPokemon, pokemonInBag } = props;
     const [pokemonToRender, setPokemonToRender] = useState([]);
 
-    console.log(pokemonToRender);
-
     function renderAllPokemon() {
         setPokemonToRender(allPokemon);
     }

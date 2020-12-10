@@ -39,7 +39,7 @@ function App() {
           <Route
             exact
             path="/pokemons/:name"
-            render={() => <DetailPage />}
+            render={() => <DetailPage setPokemonInBag={setPokemonInBag} />}
           />
           <Route
             path="*"

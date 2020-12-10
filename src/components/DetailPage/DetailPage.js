@@ -1,28 +1,37 @@
 import { useEffect, useState } from "react";
 import "./DetailPage.scss";
 
-const DetailPage = () => {
+const DetailPage = (props) => {
+    const { setPokemonInBag } = props;
     const [pokemon, setPokemon] = useState({});
     const [isInBag, setIsInBag] = useState(false);
+    const name = window.location.pathname.split('/')[2];
 
     function setInBag(e) {
-        setIsInBag(e.target.checked);
-        // STORE IN LOCALSTORAGE
-        console.log('Store in localstorage');
+        const store = e.target.checked;
+        setIsInBag(store);
+        const bagStore = JSON.parse(localStorage.getItem('pokedex-pokemon-in-bag'));
+        if(store) {
+            localStorage.setItem('pokedex-pokemon-in-bag', JSON.stringify([...bagStore, name]));
+            setPokemonInBag([...bagStore, name]);
+        } else {
+            localStorage.setItem('pokedex-pokemon-in-bag', JSON.stringify([...bagStore].filter(pokemon => pokemon !== name)));
+            setPokemonInBag([...bagStore].filter(pokemon => pokemon !== name));
+        }
     }
 
     useEffect(() => {
-        // const pokemon = JSON.parse(localStorage.getItem(`pokemon-${name}`));
-        // const inBag = JSON.parse(localStorage.getItem('pokedex-pokemon-in-bag'));
-        // setPokemon(pokemon);
-        // setIsInBag(inBag);
+        const pokemon = JSON.parse(localStorage.getItem(`pokemon-${name}`));
+        setPokemon(pokemon);
+        const inBag = JSON.parse(localStorage.getItem('pokedex-pokemon-in-bag'));
+        setIsInBag(inBag.indexOf(name) !== -1);
     }, []);
 
     return(
         <div className="DetailPage">
             <div className="DetailPage__info">
                 <div className="DetailPage__info__profile-picture">
-                    <img src="https://upload.wikimedia.org/wikipedia/en/2/28/Pok%C3%A9mon_Bulbasaur_art.png" />
+                    <img src={pokemon.imageUrl} />
                     <span>{pokemon.name}</span>
                 </div>
                 <div className="DetailPage__info__in-bag">
@@ -38,10 +47,10 @@ const DetailPage = () => {
                     <b>Weight:</b> {pokemon.weight}
                 </div>
                 <div className="DetailPage__info__types">
-                    <b>Types:</b> {pokemon.types && pokemon.types.map(type => type.type.name).join(" ")}
+                    <b>Types:</b> {pokemon.types}
                 </div>
                 <div className="DetailPage__info__abilities">
-                    <b>Abilities:</b> {pokemon.abilities && pokemon.abilities.map(ability => ability.ability.name).join(" ")}
+                    <b>Abilities:</b> {pokemon.abilities}
                 </div>
             </div>
             <div className="DetailPage__location">

@@ -1,13 +1,19 @@
 .ToggleButton {
+    border-radius: 4px;
+    overflow: hidden;
+
     &__button {
         background-color: #ccc;
         border: none;
         color: black;
         padding: 0.5rem 1rem;
         outline: none;
+        cursor: pointer;
+
         &--selected {
             background-color: red;
             color: white;
+            box-shadow: inset 2px 2px 2px #000;
         }
     }
 }
