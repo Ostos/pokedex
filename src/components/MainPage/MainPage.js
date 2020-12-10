@@ -7,9 +7,13 @@ import "./MainPage.scss";
 const MainPage = (props) => {
     const { allPokemon, pokemonInBag, pokemonHashMap } = props;
     const [pokemonToRender, setPokemonToRender] = useState([]);
+    const [searchInput, setSearchInput] = useState('');
+    const [searchType, setSearchType] = useState('ALL');
 
     function renderAllPokemon() {
         setPokemonToRender(allPokemon);
+        setSearchInput('');
+        setSearchType('ALL');
     }
 
     function renderPokemonInBag() {
@@ -20,21 +24,42 @@ const MainPage = (props) => {
                 }
             )
         );
+        setSearchInput('');
+        setSearchType('IN_BAG');
     }
 
     function searchHandler(e) {
         const value = e.target.value;
         const suggestions = getSearchSuggestions(value, pokemonHashMap);
+
+        setSearchInput(value);
+
         if(suggestions.length > 0) {
-            setPokemonToRender(
-                allPokemon.filter(
-                    function filterByPokemonInBag(pokemon) {
-                        return suggestions.indexOf(pokemon.name) !== -1
-                    }
-                )
-            );
+            if(searchType === 'ALL') {
+                setPokemonToRender(
+                    allPokemon.filter(
+                        function filterBySuggestions(pokemon) {
+                            return suggestions.indexOf(pokemon.name) !== -1
+                        }
+                    )
+                );
+            } else {
+                setPokemonToRender(
+                    allPokemon
+                        .filter(
+                            function filterBySuggestions(pokemon) {
+                                return suggestions.indexOf(pokemon.name) !== -1
+                            }
+                        ).
+                        filter(
+                            function filterByPokemonInBag(pokemon) {
+                                return pokemonInBag.indexOf(pokemon.name) !== -1
+                            }
+                        )
+                );
+            }
         } else {
-            setPokemonToRender(allPokemon);
+            setPokemonToRender(value.length ? [] : allPokemon);
         }
     }
 
@@ -51,7 +76,7 @@ const MainPage = (props) => {
                     handler1={renderAllPokemon}
                     handler2={renderPokemonInBag}
                 />
-                <div><input type="text" placeholder="Search..." onChange={searchHandler} /></div>
+                <div><input type="text" placeholder="Search..." onChange={searchHandler} value={searchInput} /></div>
             </div>
             <div className="MainPage__cards">
                 {pokemonToRender.map(pokemon => {

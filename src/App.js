@@ -13,26 +13,41 @@ function App() {
   const [pokemonHashMap, setPokemonHashMap] = useState({});
 
   async function storeAllPokemon() {
+    // check if pokemon are already stored
     const storedPokemon = JSON.parse(localStorage.getItem('pokedex-all-pokemon'));
+
     if(!storedPokemon) {
+      // request data from api
       const service = new pokedexService();
       const pokemon = await service.getAllPokemon();
+
+      // store pokemon data in local storage
       localStorage.setItem('pokedex-all-pokemon', JSON.stringify(pokemon.results));
       setAllPokemon(pokemon.results);
+
+      // get sorted list of pokemon names
       const names = pokemon.results.map(function getPokemonName(p) {
         return p.name
       }).sort();
+
+      // create and store hashmap with pokemon names
       const dict = createDictFromArrayOfWords(names);
       localStorage.setItem('pokedex-hashmap', JSON.stringify(dict));
       setPokemonHashMap(dict);
     } else {
+      // set state from stored data
       setAllPokemon(storedPokemon);
       setPokemonHashMap(JSON.parse(localStorage.getItem('pokedex-hashmap')));
     }
+
+    // check if pokemon in bag storage exists already
     const pokemonInBag = JSON.parse(localStorage.getItem('pokedex-pokemon-in-bag'));
+
     if(!pokemonInBag) {
+      // Initialize pokemon in bag storage
       localStorage.setItem('pokedex-pokemon-in-bag', JSON.stringify([]));
     } else {
+      // set state for pokemon in bag
       setPokemonInBag(pokemonInBag);
     }
   }
