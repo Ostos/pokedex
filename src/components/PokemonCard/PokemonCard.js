@@ -24,7 +24,8 @@ const PokemonCard = (props) => {
                 types: pokemon.types.map(type => type.type.name).join(" "),
                 imageUrl: pokemon.sprites.front_default,
                 inBag: false,
-                name: name
+                name: name,
+                id: pokemon.id
             };
             localStorage.setItem(`pokemon-${name}`, JSON.stringify(pokemonDataToStore));
 

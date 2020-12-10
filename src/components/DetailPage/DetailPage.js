@@ -1,10 +1,21 @@
 import { useEffect, useState } from "react";
 import "./DetailPage.scss";
+import GoogleMapReact from 'google-map-react';
+import pokedexService from "../../services/pokedexService";
+
+const MapsMarker = (props) => {
+    return(
+        <img src={props.image} />
+    );
+};
 
 const DetailPage = (props) => {
     const [pokemon, setPokemon] = useState({});
     const [isInBag, setIsInBag] = useState(false);
+    const [locations, setLocations] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
     const name = window.location.pathname.split('/')[2];
+    const API_KEY = 'AIzaSyCcpUwGDDw_x4yR4Ng-fbS5CfcJGr5CG6A';
 
     function setInBag(e) {
         const store = e.target.checked;
@@ -13,10 +24,23 @@ const DetailPage = (props) => {
         localStorage.setItem(`pokemon-${name}`, JSON.stringify({ ...pokemon, inBag : store }));
     }
 
+    async function loadPokemonLocations(id) {
+        setIsLoading(true);
+        const service = new pokedexService();
+        const locationResponse = await service.getPokemonLocations(id);
+        const locations = locationResponse.map(pair => {
+            const [lat, lng] = pair.split(',');
+            return { lat: parseFloat(lat), lng: parseFloat(lng) };
+        });
+        setLocations(locations);
+        setIsLoading(false);
+    }
+
     useEffect(() => {
         const pokemon = JSON.parse(localStorage.getItem(`pokemon-${name}`));
         setPokemon(pokemon);
         setIsInBag(pokemon.inBag);
+        loadPokemonLocations(pokemon.id);
     }, []);
 
     return(
@@ -46,7 +70,28 @@ const DetailPage = (props) => {
                 </div>
             </div>
             <div className="DetailPage__location">
-                <div className="DetailPage__location__map"></div>
+                <div className="DetailPage__location__map">
+                    {!isLoading && (
+                        <GoogleMapReact
+                            bootstrapURLKeys={{ key: API_KEY }}
+                            defaultCenter={locations[0] || { lat: 32.715736, lng: -117.161087 }}
+                            defaultZoom={7}
+                        >
+                            {locations.length > 0 && locations.map((location, index) => {
+                                return (
+                                    <MapsMarker
+                                        key={index}
+                                        image={pokemon.imageUrl}
+                                        {...location}
+                                    />
+                                )
+                            })}
+                        </GoogleMapReact>
+                    )}
+                    {isLoading && (
+                        <div className="DetailPage__location__map__loading">Loading...</div>
+                    )}
+                </div>
             </div>
         </div>
     );
