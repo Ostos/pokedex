@@ -5,7 +5,7 @@ import ToggleButton from "../ToggleButton/ToggleButton";
 import "./MainPage.scss";
 
 const MainPage = (props) => {
-    const { allPokemon, pokemonInBag, pokemonHashMap } = props;
+    const { allPokemon, pokemonHashMap } = props;
     const [pokemonToRender, setPokemonToRender] = useState([]);
     const [searchInput, setSearchInput] = useState('');
     const [searchType, setSearchType] = useState('ALL');
@@ -20,7 +20,8 @@ const MainPage = (props) => {
         setPokemonToRender(
             allPokemon.filter(
                 function filterByPokemonInBag(pokemon) {
-                    return pokemonInBag.indexOf(pokemon.name) !== -1
+                    const storedPokemon = JSON.parse(localStorage.getItem(`pokemon-${pokemon.name}`));
+                    return pokemon.name === storedPokemon.name && storedPokemon.inBag;
                 }
             )
         );
@@ -47,13 +48,9 @@ const MainPage = (props) => {
                 setPokemonToRender(
                     allPokemon
                         .filter(
-                            function filterBySuggestions(pokemon) {
-                                return suggestions.indexOf(pokemon.name) !== -1
-                            }
-                        ).
-                        filter(
-                            function filterByPokemonInBag(pokemon) {
-                                return pokemonInBag.indexOf(pokemon.name) !== -1
+                            function filterBySuggestionsAndInBag(pokemon) {
+                                const storedPokemon = JSON.parse(localStorage.getItem(`pokemon-${pokemon.name}`));
+                                return suggestions.indexOf(pokemon.name) !== -1 && pokemon.name === storedPokemon.name && storedPokemon.inBag;
                             }
                         )
                 );

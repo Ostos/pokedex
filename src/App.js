@@ -9,7 +9,6 @@ import { createDictFromArrayOfWords } from './utils/utils';
 
 function App() {
   const [allPokemon, setAllPokemon] = useState([]);
-  const [pokemonInBag, setPokemonInBag] = useState([]);
   const [pokemonHashMap, setPokemonHashMap] = useState({});
 
   async function storeAllPokemon() {
@@ -39,17 +38,6 @@ function App() {
       setAllPokemon(storedPokemon);
       setPokemonHashMap(JSON.parse(localStorage.getItem('pokedex-hashmap')));
     }
-
-    // check if pokemon in bag storage exists already
-    const pokemonInBag = JSON.parse(localStorage.getItem('pokedex-pokemon-in-bag'));
-
-    if(!pokemonInBag) {
-      // Initialize pokemon in bag storage
-      localStorage.setItem('pokedex-pokemon-in-bag', JSON.stringify([]));
-    } else {
-      // set state for pokemon in bag
-      setPokemonInBag(pokemonInBag);
-    }
   }
 
   useEffect(() => {
@@ -63,11 +51,11 @@ function App() {
           <Route
             exact
             path="/pokemons/:name"
-            render={() => <DetailPage setPokemonInBag={setPokemonInBag} />}
+            render={() => <DetailPage />}
           />
           <Route
             path="*"
-            render={() => <MainPage allPokemon={allPokemon} pokemonInBag={pokemonInBag} pokemonHashMap={pokemonHashMap} />}
+            render={() => <MainPage allPokemon={allPokemon} pokemonHashMap={pokemonHashMap} />}
           />
         </Switch>
       </BrowserRouter>

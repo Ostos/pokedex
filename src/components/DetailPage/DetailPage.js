@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "./DetailPage.scss";
 
 const DetailPage = (props) => {
-    const { setPokemonInBag } = props;
+    // const { setPokemonInBag } = props;
     const [pokemon, setPokemon] = useState({});
     const [isInBag, setIsInBag] = useState(false);
     const name = window.location.pathname.split('/')[2];
@@ -10,21 +10,14 @@ const DetailPage = (props) => {
     function setInBag(e) {
         const store = e.target.checked;
         setIsInBag(store);
-        const bagStore = JSON.parse(localStorage.getItem('pokedex-pokemon-in-bag'));
-        if(store) {
-            localStorage.setItem('pokedex-pokemon-in-bag', JSON.stringify([...bagStore, name]));
-            setPokemonInBag([...bagStore, name]);
-        } else {
-            localStorage.setItem('pokedex-pokemon-in-bag', JSON.stringify([...bagStore].filter(pokemon => pokemon !== name)));
-            setPokemonInBag([...bagStore].filter(pokemon => pokemon !== name));
-        }
+        const pokemon = JSON.parse(localStorage.getItem(`pokemon-${name}`));
+        localStorage.setItem(`pokemon-${name}`, JSON.stringify({ ...pokemon, inBag : store }));
     }
 
     useEffect(() => {
         const pokemon = JSON.parse(localStorage.getItem(`pokemon-${name}`));
         setPokemon(pokemon);
-        const inBag = JSON.parse(localStorage.getItem('pokedex-pokemon-in-bag'));
-        setIsInBag(inBag.indexOf(name) !== -1);
+        setIsInBag(pokemon.inBag);
     }, []);
 
     return(

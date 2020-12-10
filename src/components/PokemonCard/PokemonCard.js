@@ -22,7 +22,9 @@ const PokemonCard = (props) => {
                 height: pokemon.height,
                 weight: pokemon.weight,
                 types: pokemon.types.map(type => type.type.name).join(" "),
-                imageUrl: pokemon.sprites.front_default
+                imageUrl: pokemon.sprites.front_default,
+                inBag: false,
+                name: name
             };
             localStorage.setItem(`pokemon-${name}`, JSON.stringify(pokemonDataToStore));
 
