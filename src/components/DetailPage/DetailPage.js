@@ -3,6 +3,7 @@ import "./DetailPage.scss";
 import GoogleMapReact from 'google-map-react';
 import pokedexService from "../../services/pokedexService";
 import { Redirect, useParams } from "react-router-dom";
+import localStore from '../../utils/store';
 
 const MapsMarker = (props) => {
     return(
@@ -22,8 +23,8 @@ const DetailPage = (props) => {
     function setInBag(e) {
         const store = e.target.checked;
         setIsInBag(store);
-        const pokemon = JSON.parse(localStorage.getItem(`pokemon-${name}`));
-        localStorage.setItem(`pokemon-${name}`, JSON.stringify({ ...pokemon, inBag : store }));
+        const pokemon = localStore.get(`pokemon-${name}`);
+        localStore.set(`pokemon-${name}`, { ...pokemon, inBag : store });
     }
 
     async function loadPokemonLocations(id) {
@@ -39,7 +40,7 @@ const DetailPage = (props) => {
     }
 
     useEffect(() => {
-        const pokemon = JSON.parse(localStorage.getItem(`pokemon-${name}`));
+        const pokemon = localStore.get(`pokemon-${name}`);
         if(!pokemon) {
             setRedirect(true);
         } else {

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { SEARCH_TYPE } from "../../constants";
+import localStore from "../../utils/store";
 import { getSearchSuggestions } from "../../utils/utils";
 import PokemonCard from "../PokemonCard/PokemonCard";
 import ToggleButton from "../ToggleButton/ToggleButton";
@@ -17,13 +18,10 @@ const MainPage = (props) => {
         setSearchType(SEARCH_TYPE.ALL);
     }
 
-    function filterByPokemonInBag() {
-        return allPokemon.filter(
-            function filterByPokemonInBag(pokemon) {
-                const storedPokemon = JSON.parse(localStorage.getItem(`pokemon-${pokemon.name}`));
-                return pokemon.name === storedPokemon.name && storedPokemon.inBag;
-            }
-        );
+    function renderPokemonInBag() {
+        setPokemonToRender(filterByPokemonInBag());
+        setSearchInput('');
+        setSearchType(SEARCH_TYPE.IN_BAG);
     }
 
     function filterPokemonBySuggestions(suggestions) {
@@ -34,20 +32,22 @@ const MainPage = (props) => {
         )
     }
 
-    function filterInBagPokemonBySuggestions(suggestions) {
-        return allPokemon
-                .filter(
-                    function filterBySuggestionsAndInBag(pokemon) {
-                        const storedPokemon = JSON.parse(localStorage.getItem(`pokemon-${pokemon.name}`));
-                        return pokemon.name === storedPokemon.name && storedPokemon.inBag && suggestions.indexOf(pokemon.name) !== -1;
-                    }
-                );
+    function filterByPokemonInBag() {
+        return allPokemon.filter(
+            function filterByPokemonInBag(pokemon) {
+                const storedPokemon = localStore.get(`pokemon-${pokemon.name}`);
+                return pokemon.name === storedPokemon.name && storedPokemon.inBag;
+            }
+        );
     }
 
-    function renderPokemonInBag() {
-        setPokemonToRender(filterByPokemonInBag());
-        setSearchInput('');
-        setSearchType(SEARCH_TYPE.IN_BAG);
+    function filterInBagPokemonBySuggestions(suggestions) {
+        return allPokemon.filter(
+            function filterBySuggestionsAndInBag(pokemon) {
+                const storedPokemon = localStore.get(`pokemon-${pokemon.name}`);
+                return pokemon.name === storedPokemon.name && storedPokemon.inBag && suggestions.indexOf(pokemon.name) !== -1;
+            }
+        );
     }
 
     function searchHandler(e) {

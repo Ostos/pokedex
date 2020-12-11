@@ -6,6 +6,7 @@ import { ANY_PAGE, DETAIL_PAGE } from './utils/routingPaths';
 import pokedexService from './services/pokedexService';
 import React, { useEffect, useState } from 'react';
 import { createDictFromArrayOfWords } from './utils/utils';
+import localStore from './utils/store';
 
 function App() {
   const [allPokemon, setAllPokemon] = useState([]);
@@ -13,7 +14,7 @@ function App() {
 
   async function storeAllPokemon() {
     // check if pokemon are already stored
-    const storedPokemon = JSON.parse(localStorage.getItem('pokedex-all-pokemon'));
+    const storedPokemon = localStore.get('pokedex-all-pokemon');
 
     if(!storedPokemon) {
       // request data from api
@@ -21,7 +22,7 @@ function App() {
       const pokemon = await service.getAllPokemon();
 
       // store pokemon data in local storage
-      localStorage.setItem('pokedex-all-pokemon', JSON.stringify(pokemon.results));
+      localStore.set('pokedex-all-pokemon', pokemon.results);
       setAllPokemon(pokemon.results);
 
       // get sorted list of pokemon names
@@ -31,12 +32,12 @@ function App() {
 
       // create and store hashmap with pokemon names
       const dict = createDictFromArrayOfWords(names);
-      localStorage.setItem('pokedex-hashmap', JSON.stringify(dict));
+      localStore.set('pokedex-hashmap', dict);
       setPokemonHashMap(dict);
     } else {
       // set state from stored data
       setAllPokemon(storedPokemon);
-      setPokemonHashMap(JSON.parse(localStorage.getItem('pokedex-hashmap')));
+      setPokemonHashMap(localStore.get('pokedex-hashmap'));
     }
   }
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import pokedexService from "../../services/pokedexService";
+import localStore from "../../utils/store";
 import "./PokemonCard.scss";
 
 const PokemonCard = (props) => {
@@ -9,7 +10,7 @@ const PokemonCard = (props) => {
 
     async function getPokemon() {
         // check if pokemon info already exists in storage
-        let pokemonInfo = JSON.parse(localStorage.getItem(`pokemon-${name}`));
+        const pokemonInfo = localStore.get(`pokemon-${name}`);
 
         if(!pokemonInfo) {
             // request pokemon info from api
@@ -27,7 +28,7 @@ const PokemonCard = (props) => {
                 name: name,
                 id: pokemon.id
             };
-            localStorage.setItem(`pokemon-${name}`, JSON.stringify(pokemonDataToStore));
+            localStore.set(`pokemon-${name}`, pokemonDataToStore)
 
             // set state for imageUrl
             setImageSrc(pokemonDataToStore.imageUrl);
