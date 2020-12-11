@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./DetailPage.scss";
 import GoogleMapReact from 'google-map-react';
 import pokedexService from "../../services/pokedexService";
+import { Redirect, useParams } from "react-router-dom";
 
 const MapsMarker = (props) => {
     return(
@@ -14,8 +15,9 @@ const DetailPage = (props) => {
     const [isInBag, setIsInBag] = useState(false);
     const [locations, setLocations] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    const name = window.location.pathname.split('/')[2];
+    const [redirect, setRedirect] = useState(false);
     const API_KEY = 'AIzaSyCcpUwGDDw_x4yR4Ng-fbS5CfcJGr5CG6A';
+    const { name } = useParams();
 
     function setInBag(e) {
         const store = e.target.checked;
@@ -38,10 +40,20 @@ const DetailPage = (props) => {
 
     useEffect(() => {
         const pokemon = JSON.parse(localStorage.getItem(`pokemon-${name}`));
-        setPokemon(pokemon);
-        setIsInBag(pokemon.inBag);
-        loadPokemonLocations(pokemon.id);
+        if(!pokemon) {
+            setRedirect(true);
+        } else {
+            setPokemon(pokemon);
+            setIsInBag(pokemon.inBag);
+            loadPokemonLocations(pokemon.id);
+        }
     }, []);
+
+    if(redirect) {
+        return(
+            <Redirect to='/' />
+        );
+    }
 
     return(
         <div className="DetailPage">
