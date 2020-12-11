@@ -74,8 +74,8 @@ const MainPage = (props) => {
         <div className="MainPage">
             <div className="MainPage__filters">
                 <ToggleButton
-                    name1="All"
-                    name2="Bag"
+                    label1="All"
+                    label2="Bag"
                     handler1={renderAllPokemon}
                     handler2={renderPokemonInBag}
                 />

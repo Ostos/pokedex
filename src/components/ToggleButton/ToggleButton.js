@@ -3,7 +3,7 @@ import { useState } from "react";
 import "./ToggleButton.scss";
 
 const ToggleButton = (props) => {
-    const { name1, name2, handler1, handler2 } = props;
+    const { label1, label2, handler1, handler2 } = props;
     const [button1Selected, setButton1Selected] = useState(true);
     const [button2Selected, setButton2Selected] = useState(false);
 
@@ -34,7 +34,7 @@ const ToggleButton = (props) => {
                     "ToggleButton__button--selected": button1Selected
                 })}
             >
-                {name1}
+                {label1}
             </button>
             <button
                 onClick={onToggleButton2}
@@ -42,7 +42,7 @@ const ToggleButton = (props) => {
                     "ToggleButton__button--selected": button2Selected
                 })}
             >
-                {name2}
+                {label2}
             </button>
         </div>
     );
