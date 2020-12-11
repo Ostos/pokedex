@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./DetailPage.scss";
 import GoogleMapReact from 'google-map-react';
-import pokedexService from "../../services/pokedexService";
+import PokedexService from "../../services/PokedexService";
 import { Redirect, useParams } from "react-router-dom";
 import localStore from '../../utils/store';
 
@@ -29,7 +29,7 @@ const DetailPage = (props) => {
 
     async function loadPokemonLocations(id) {
         setIsLoading(true);
-        const service = new pokedexService();
+        const service = new PokedexService();
         const locationResponse = await service.getPokemonLocations(id);
         const locations = locationResponse.map(pair => {
             const [lat, lng] = pair.split(',');

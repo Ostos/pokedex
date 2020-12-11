@@ -1,22 +1,63 @@
+import localStore from "../utils/store";
+import { createDictFromArrayOfWords } from "../utils/utils";
 const { ALL_POKEMON_LIST } = require("../api/urls")
 
-class pokedexService {
+class PokedexService {
     getAllPokemon = async () => {
         try {
+            const storedPokemon = localStore.get('pokedex-all-pokemon');
+            const storedPokedexHashmap = localStore.get('pokedex-hashmap');
+            if(storedPokemon && storedPokedexHashmap) {
+                return {
+                    pokemon: storedPokemon,
+                    pokedexHashmap: storedPokedexHashmap
+                };
+            }
+
             const response = await fetch(ALL_POKEMON_LIST);
-            const data = await response.json()
-            return data;
+            const data = await response.json();
+            const pokemon = data.results;
+            localStore.set('pokedex-all-pokemon', pokemon);
+
+            // get sorted list of pokemon names
+            const names = pokemon.map(function getPokemonName(p) {
+                return p.name;
+            }).sort();
+        
+            // create and store hashmap with pokemon names
+            const pokedexHashmap = createDictFromArrayOfWords(names);
+            localStore.set('pokedex-hashmap', pokedexHashmap);
+
+            return { pokemon, pokedexHashmap };
         } catch(error) {
             console.error("Couldn't get all pokemon", error);
             return error;
         }
     }
 
-    getPokemon = async (url) => {
+    getPokemon = async ({ name, url }) => {
         try {
+            const storedPokemonInfo = localStore.get(`pokemon-${name}`);
+            if(storedPokemonInfo) {
+                return storedPokemonInfo;
+            }
+
             const response = await fetch(url);
-            const data = await response.json();
-            return data;
+            const pokemon = await response.json();
+
+            const pokemonDataToStore = {
+                abilities: pokemon.abilities.map(ability => ability.ability.name).join(" "),
+                height: pokemon.height,
+                weight: pokemon.weight,
+                types: pokemon.types.map(type => type.type.name).join(" "),
+                imageUrl: pokemon.sprites.front_default,
+                inBag: false,
+                name: name,
+                id: pokemon.id
+            };
+            localStore.set(`pokemon-${name}`, pokemonDataToStore);
+
+            return pokemonDataToStore;
         } catch(error) {
             console.error("Couldn't get individual pokemon", error);
             return error;
@@ -39,4 +80,4 @@ class pokedexService {
     }
 }
 
-export default pokedexService;
+export default PokedexService;
