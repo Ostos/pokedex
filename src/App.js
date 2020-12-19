@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import MainPage from './components/MainPage/MainPage';
 import DetailPage from './components/DetailPage/DetailPage';
-import PokedexService from './services/PokedexService';
+import PokedexService from './services/pokedexService';
 import React, { useEffect, useState } from 'react';
 import { ANY_PAGE, DETAIL_PAGE } from './utils/routingPaths';
 import './App.css';

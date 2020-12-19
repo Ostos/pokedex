@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import PokedexService from "../../services/PokedexService";
+import PokedexService from "../../services/pokedexService";
 import "./PokemonCard.scss";
 
 const PokemonCard = (props) => {

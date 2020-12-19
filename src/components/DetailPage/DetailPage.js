@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./DetailPage.scss";
 import GoogleMapReact from 'google-map-react';
-import PokedexService from "../../services/PokedexService";
+import PokedexService from "../../services/pokedexService";
 import { Redirect, useParams } from "react-router-dom";
 import localStore from '../../utils/store';
 
