@@ -1,6 +1,15 @@
 .DetailPage {
     display: flex;
 
+    &__error-message {
+        position: absolute;
+        padding: 1rem;
+        background-color: red;
+        color: white;
+        width: 100%;
+        z-index: 100;
+    }
+
     &__info {
         flex: 1 0 50%;
         padding: 4rem;
