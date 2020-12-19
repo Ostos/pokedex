@@ -7,11 +7,14 @@ import localStore from '../../utils/store';
 
 const MapsMarker = (props) => {
     return(
-        <img src={props.image} />
+        <img
+            src={props.image}
+            alt="pokemon location marker"
+        />
     );
 };
 
-const DetailPage = (props) => {
+const DetailPage = () => {
     const [pokemon, setPokemon] = useState({});
     const [isInBag, setIsInBag] = useState(false);
     const [locations, setLocations] = useState([]);
@@ -48,7 +51,7 @@ const DetailPage = (props) => {
             setIsInBag(pokemon.inBag);
             loadPokemonLocations(pokemon.id);
         }
-    }, []);
+    }, [name]);
 
     if(redirect) {
         return(
@@ -60,7 +63,10 @@ const DetailPage = (props) => {
         <div className="DetailPage">
             <div className="DetailPage__info">
                 <div className="DetailPage__info__profile-picture">
-                    <img src={pokemon.imageUrl} />
+                    <img
+                        src={pokemon.imageUrl}
+                        alt={name}
+                    />
                     <span>{pokemon.name}</span>
                 </div>
                 <div className="DetailPage__info__in-bag">

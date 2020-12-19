@@ -7,22 +7,26 @@ const PokemonCard = (props) => {
     const { name } = props.pokemon;
     const [imageSrc, setImageSrc] = useState("");
 
-    async function getPokemon() {
-        const service = new PokedexService();
-        const pokemon = await service.getPokemon(props.pokemon);
-        setImageSrc(pokemon.imageUrl);
-    }
-
     useEffect(() => {
+        async function getPokemon() {
+            const service = new PokedexService();
+            const pokemon = await service.getPokemon(props.pokemon);
+            setImageSrc(pokemon.imageUrl);
+        }
+
         getPokemon();
-    }, []);
+    }, [props.pokemon]);
 
     return(
         <Link
             to={`/pokemons/${name}`}
             className="PokemonCard"
         >
-            <img src={imageSrc} className="PokemonCard__image" />
+            <img
+                src={imageSrc}
+                alt={name}
+                className="PokemonCard__image"
+            />
             <div>{name}</div>
         </Link>
     );
